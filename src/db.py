@@ -25,7 +25,6 @@ class Executable:
     executable_id: str
     display_name: str
     path: Optional[str] = None
-    commit_hash: Optional[str] = None
     sha256: Optional[str] = None
     command_template: Optional[str] = None
 
@@ -93,7 +92,6 @@ class LeaderboardDB:
             CREATE TABLE IF NOT EXISTS executables (
               executable_id text primary key,
               display_name text not null,
-              commit_hash text,
               path text,
               sha256 text,
               command_template text
@@ -145,8 +143,8 @@ class LeaderboardDB:
         """Inserts an Executable into the database."""
         query = '''
             INSERT OR REPLACE INTO executables 
-            (executable_id, display_name, path, commit_hash, sha256, command_template)
-            VALUES (:executable_id, :display_name, :path, :commit_hash, :sha256, :command_template)
+            (executable_id, display_name, path, sha256, command_template)
+            VALUES (:executable_id, :display_name, :path, :sha256, :command_template)
         '''
         self.conn.execute(query, asdict(exe))
         self.conn.commit()
