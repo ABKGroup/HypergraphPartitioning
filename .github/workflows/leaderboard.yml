@@ -1,0 +1,38 @@
+name: Hypergraph Leaderboard CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-leaderboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history so we can get accurate commit hashes for the partitions
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install huggingface_hub zstandard
+
+      - name: Process Solutions and Generate DB
+        run: |
+          python src/process_solutions.py
+
+      - name: Upload Leaderboard Database Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: leaderboard-db
+          path: leaderboard.db
+          retention-days: 90
