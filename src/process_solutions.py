@@ -75,7 +75,7 @@ def process_solutions(solutions_dir: str, db_path: str):
                 ))
                 seen_executables.add(executable_id)
             
-            item_id = f"{dataset}__{benchmark_name}"
+            item_id = f"{dataset}::{benchmark_name}.hgr"
             if item_id not in seen_benchmarks:
                 db.add_benchmark_item(BenchmarkItem(
                     item_id=item_id,
